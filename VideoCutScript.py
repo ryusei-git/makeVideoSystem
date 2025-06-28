@@ -22,17 +22,12 @@ def time_to_seconds(time_str):
 
 
 def ytdlp_bytime(movie_url: str, time_ranges: list):
-    
     for idx, (start, end) in enumerate(time_ranges, start=1):
-        def set_download_ranges(info_dict, self):
-            start_seconds = time_to_seconds(start)
-            end_seconds = time_to_seconds(end)
-            return [{'start_time': start_seconds, 'end_time': end_seconds}]
-        
-        # ファイル名に時間範囲とインデックスを追加して一意性を保証
+        # download_sectionsの形式: "*start-end"
+        section = f"*{start}-{end}"
         ydl_opts = {
-            'outtmpl': os.path.join('base_videos', 'video'+f'_{idx}_{start}-{end}.%(ext)s'),
-            'download_ranges': set_download_ranges
+            'outtmpl': os.path.join('base_videos', f'video_{idx}_{start}-{end}.%(ext)s'),
+            'download_sections': section
         }
 
         with YoutubeDL(ydl_opts) as ydl:
